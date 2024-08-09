@@ -5,6 +5,8 @@
 
 This library is described in a series of posts on [my blog](https://lardel.li/2024/07/llm_language_model_library_social_sciences.html)
 
+Github repository: [/MarcoLardelli/sailss](https://github.com/MarcoLardelli/sailss)
+
 **Important note: this library is work in progress and still in a raw state.**
 
 ## Installation

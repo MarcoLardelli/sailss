@@ -12,7 +12,12 @@
 
 ###Copyright © 2024 Marco Lardelli
 
+This library is described in a series of posts on [my blog](https://lardel.li/2024/07/llm_language_model_library_social_sciences.html)
+
+Github repository: [/MarcoLardelli/sailss](https://github.com/MarcoLardelli/sailss)
+
 """
+
 import mlx.core as mx
 import mlx.nn as nn
 from typing import Any, Callable, Dict, Generator, Optional, Tuple, Union
