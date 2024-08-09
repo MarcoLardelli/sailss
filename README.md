@@ -46,7 +46,7 @@ git clone https://huggingface.co/mistralai/Meta-Llama-3-8B
 save the model folder into the *./models* directory.
 
 Note:
-**Models to be used for SAILSS do not need to be instruction tuned**
+**Models to be used for SAILSS do not need to be instruction tuned.**   
 Models without instruction tuning might perform better.
 
 # Documentation
@@ -65,6 +65,6 @@ You can run the examples in the *examples* folder from the SAILSS directory:
 python3 -m examples.example_1
 ```
 
-Author: Marco Lardelli, Zurich/Switzerland
-Licence: MIT (see included license document)
-Copyright © 2024 Marco Lardelli
+Author: Marco Lardelli, Zurich/Switzerland   
+Licence: MIT (see included license document)   
+Copyright © 2024 Marco Lardelli   
