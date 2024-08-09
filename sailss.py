@@ -64,7 +64,7 @@ class Experiment:
         """
         Check whether all the prompts have the same length (in tokens!). Returns True if yes, otherwise False
         """
-        len0 = len(self.results.details[0])
+        len0 = len(self.results[0]['details'])
         same_length = True
         for result in self.results:
             details = result['details']
@@ -74,7 +74,7 @@ class Experiment:
         return same_length
 
 
-    def evaluate(self):
+    def evaluate(self, verbose=False):
         """
         Evaluate all the prompts of this experiment using the LLM model
 
@@ -96,14 +96,14 @@ class Experiment:
         - 'index': index of token
         - 'token': the token (int)
         - 'token_str': the token as a string
-        - 'logprob': logprop of token
+        - 'logprob': logprob of token
         - 'p': probability of token
         - 'predicted_token_str': token (str) predicted by LLM for this positions
 
 
         """
         for prompt in self.prompts:
-            perplexity_full,perplexity, details, prompt_cleaned = measure(self.model, self.tokenizer, prompt=prompt, verbose=True)
+            perplexity_full,perplexity, details, prompt_cleaned = measure(self.model, self.tokenizer, prompt=prompt, verbose=verbose)
             self.results.append({
                 'prompt': prompt,
                 'prompt_cleaned': prompt_cleaned,
@@ -144,6 +144,25 @@ class Experiment:
         ccode = colorcodes.get(color_name, 30)
         return f"\033[1m\033[{ccode}m{s}\033[0m"
 
+
+    def _colorprint_by_p(s, p):
+        """
+        return a string colored (for console) according to probability p
+
+        0 -> 1 corresponds to red (very low probab.) -> yellow (low probab.) -> green (medium probab.) -> blue (high probab.)
+        """
+        if p==0.5: # a special value returned by normalize()
+            color = "gray"
+        elif p > 0.75:
+            color = "blue"
+        elif p > 0.50:
+            color = "green"
+        elif p > 0.25:
+            color = "yellow"
+        else:
+            color = "red"
+        return Experiment._colorprint(color, s)
+    
 
     def _colorprint_by_p_html(s: str, p: float) -> str:
         """
@@ -193,6 +212,28 @@ class Experiment:
             return 0.5  # all values of plist are the same -> return this special value (will be rendered gray)
         
 
+    def visualize_results(self):
+        """
+        print prompt tokens to console (colored by normalized p)
+        """
+        for d_no,result in enumerate(self.results):
+            details = result['details']
+         
+            out_str=""
+            for i,detail in enumerate(details):
+                ps = []
+                for j,r in enumerate(self.results):
+                    ps.append(r['details'][i]['p'])
+
+                normalized_p = Experiment._normalize(detail['p'], ps)
+
+                out_str += Experiment._colorprint_by_p(detail['token_str'][1:], normalized_p)
+                out_str +=" "
+
+            print(out_str)
+            print()
+        
+
     def create_html_table(self) -> str:
         """
         Create a HTML table containing the results
@@ -204,16 +245,19 @@ class Experiment:
         if len(self.results)==0 or (not self._prompts_same_length()):
             return None
         
-        len0 = len(self.results.details[0])
+        len0 = len(self.results[0]['details'])
+
+        html = '<table>\n'
         
         for d_no,result in enumerate(self.results):
             tokens = []
             details = result['details']
+
+            probabs = []
+            for detail in details:
+                probabs.append(detail['p'])
+
             for token_no in range(len0):
-                
-                probabs = []
-                for i in range(len(details)):
-                    probabs.append(details[i][token_no]['p'])
                 normlized_probab = Experiment._normalize(details[token_no]['p'],probabs)
                 probab = details[token_no]['p']
                 token = details[token_no]['token']
@@ -224,30 +268,31 @@ class Experiment:
                     (token_str,normlized_probab,predicted_token_str,token,probab)
                 )
 
-        html = ""
+            html += '<tr><td>Tokens (str)</td>'
+            for i,token in enumerate(tokens):  # tokens, colored by normalized probability
+                html += '<td>'+Experiment._colorprint_by_p_html(token[0][1:],token[1])+'</td>'
+            html += '</tr>\n'
 
-        html += '<table>'
-        html += '<tr><td>Tokens (str)</td>'
-        for i,token in enumerate(tokens):  # tokens, colored by normalized probability
-            html += '<td>'+Experiment._colorprint_by_p_html(token[0][1:],token[1])+'</td>'
-        html += '</tr>'
-        html += '<tr><td>Probabs</td>'
-        for i,token in enumerate(tokens):  # probabilities
-            html += '<td>'+"{:10.8f}".format(token[4])+'</td>'
-        html += '</tr>'
-        html += '<tr><td>Predicted Token (str)</td>'
-        for i,token in enumerate(tokens): # predicted token for this position
-            if i==0:
-                start=0
-            else:
-                start=1
-            html += '<td>'+token[2][start:]+'</td>'
-        html += '</tr>'
-        html += '<tr><td>Token (int)</td>'
-        for i,token in enumerate(tokens):  # tokens
-            html += '<td>'+str(token[3])+'</td>'
-        html += '</tr>'
-        html += '</table>'
+            html += '<tr><td>Probabs</td>'
+            for i,token in enumerate(tokens):  # probabilities
+                html += '<td>'+"{:10.8f}".format(token[4])+'</td>'
+            html += '</tr>\n'
+
+            html += '<tr><td>Predicted Token (str)</td>'
+            for i,token in enumerate(tokens): # predicted token for this position
+                if i==0:
+                    start=0
+                else:
+                    start=1
+                html += '<td>'+token[2][start:]+'</td>'
+            html += '</tr>\n'
+
+            html += '<tr><td>Token (int)</td>'
+            for i,token in enumerate(tokens):  # tokens
+                html += '<td>'+str(token[3])+'</td>'
+            html += '</tr>\n\n'
+
+        html += '</table>\n'
 
         return html
     
@@ -292,7 +337,7 @@ def _calculate(
     - 'index': index of token
     - 'token': the token (int)
     - 'token_str': the token as a string
-    - 'logprob': logprop of token
+    - 'logprob': logprob of token
     - 'p': probability of token
     - 'predicted_token_str': token (str) predicted by LLM for this positions
        
