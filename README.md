@@ -57,6 +57,8 @@ The HTML documentation in the *docs* folder was created using [pdoc](https://pdo
 pdoc ./sailss.py -o ./docs
 ```
 
+It can be found also on the corresponding [github pages page](https://marcolardelli.github.io/sailss/) of this repository.
+
 # Examples
 
 You can run the examples in the *examples* folder from the SAILSS directory:
