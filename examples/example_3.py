@@ -1,5 +1,5 @@
 from mlx_lm import load
-from sailss import Experiment, measure
+from sailss import measure
 import pandas as pd
 
 model_name = "models/Meta-Llama-3-8B"

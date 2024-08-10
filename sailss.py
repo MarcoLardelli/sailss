@@ -1,20 +1,19 @@
-
-
 """
 
 #SAILSS: The "Scouting AI Library for Social Sciences"
 
 ##Evaluate the likelihood of sentences (or parts of sentences) based on a Large Language Model (LLM)
 
-###Author: Marco Lardelli, Zurich/Switzerland
-
-###Licence: MIT (see included license document)
-
-###Copyright © 2024 Marco Lardelli
-
-This library is described in a series of posts on [my blog](https://lardel.li/2024/07/llm_language_model_library_social_sciences.html)
+This library is described in a series of posts on [my blog lardel.li](https://lardel.li/2024/07/llm_language_model_library_social_sciences.html)
 
 Github repository: [/MarcoLardelli/sailss](https://github.com/MarcoLardelli/sailss)
+
+
+Author: Marco Lardelli, Zurich/Switzerland
+
+Licence: MIT (see included license document)
+
+Copyright © 2024 Marco Lardelli
 
 """
 
@@ -211,6 +210,13 @@ class Experiment:
         else:
             return 0.5  # all values of plist are the same -> return this special value (will be rendered gray)
         
+
+    def output_perplexities(self):
+        for d_no,result in enumerate(self.results):
+            print("Prompt",d_no,":")
+            print("  ",result['prompt_cleaned'])
+            print("  full perplexity = ",result['perplexity_full'],"  masked perplexity = ",result['perplexity'])
+
 
     def visualize_results(self):
         """
