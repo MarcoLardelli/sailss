@@ -212,6 +212,9 @@ class Experiment:
         
 
     def output_perplexities(self):
+        """
+        Output the prompts of the experiment together with their (full and masked) perplexities
+        """
         for d_no,result in enumerate(self.results):
             print("Prompt",d_no,":")
             print("  ",result['prompt_cleaned'])
@@ -222,6 +225,9 @@ class Experiment:
         """
         print prompt tokens to console (colored by normalized p)
         """
+        if len(self.results)==0 or (not self._prompts_same_length()):
+            return None
+        
         for d_no,result in enumerate(self.results):
             details = result['details']
          
@@ -240,9 +246,13 @@ class Experiment:
             print()
         
 
-    def create_html_table(self) -> str:
+    def create_html_table(self, normalize_over_prompts=True) -> str:
         """
         Create a HTML table containing the results
+
+        Args:
+
+        - normalize_over_prompts: if True -> normalize over the probabilities of the same token position of all prompts (instead of all tokens of prompt) 
 
         Returns:
 
@@ -259,12 +269,20 @@ class Experiment:
             tokens = []
             details = result['details']
 
-            probabs = []
-            for detail in details:
-                probabs.append(detail['p'])
+            if not normalize_over_prompts:
+                probabs = []
+                for detail in details:
+                    probabs.append(detail['p'])
 
             for token_no in range(len0):
+
+                if normalize_over_prompts:
+                    probabs = []
+                    for j,r in enumerate(self.results):
+                        probabs.append(r['details'][token_no]['p'])
+
                 normlized_probab = Experiment._normalize(details[token_no]['p'],probabs)
+
                 probab = details[token_no]['p']
                 token = details[token_no]['token']
                 token_str = details[token_no]['token_str']
@@ -303,16 +321,17 @@ class Experiment:
         return html
     
 
-    def save_html_table_to_file(self,file_name:str) -> None:
+    def save_html_table_to_file(self, file_name:str, normalize_over_prompts=True) -> None:
         """Create a HTML tabel from the results and save it to file_name
 
         Args:
 
         - file_name: Name of the file to save the table to
+        - normalize_over_prompts: if True -> normalize over the probabilities of the same token position of all prompts (instead of all tokens of prompt) 
         
         
         """
-        html = self.create_html_table()
+        html = self.create_html_table(normalize_over_prompts=normalize_over_prompts)
         with open(file_name, "w") as f:
             print(html, file=f)
 
@@ -350,6 +369,8 @@ def _calculate(
     """
 
     y = prompt
+
+    # the following two lines are borrowed from github.com/ml-explore/mlx-examples/ . I hope this is OK.
     kv_heads = (
         [model.n_kv_heads] * len(model.layers)
         if isinstance(model.n_kv_heads, int)
