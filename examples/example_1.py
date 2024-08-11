@@ -61,6 +61,8 @@ experiment.save_html_table_to_file("results_table.html")
 
 experiment.output_perplexities()
 
+experiment.save_results_to_csv_file('results.csv')
+
 
 
 

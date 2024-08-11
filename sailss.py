@@ -26,7 +26,9 @@ from mlx_lm.tokenizer_utils import TokenizerWrapper, load_tokenizer
 
 from transformers import PreTrainedTokenizer
 
-import math # added ml
+import math
+
+import pandas as pd
 
 
 
@@ -101,15 +103,16 @@ class Experiment:
 
 
         """
-        for prompt in self.prompts:
-            perplexity_full,perplexity, details, prompt_cleaned = measure(self.model, self.tokenizer, prompt=prompt, verbose=verbose)
-            self.results.append({
-                'prompt': prompt,
-                'prompt_cleaned': prompt_cleaned,
-                'perplexity_full': perplexity_full,
-                'perplexity': perplexity,
-                'details': details
-            })
+        if len(self.results)==0:
+            for prompt in self.prompts:
+                perplexity_full,perplexity, details, prompt_cleaned = measure(self.model, self.tokenizer, prompt=prompt, verbose=verbose)
+                self.results.append({
+                    'prompt': prompt,
+                    'prompt_cleaned': prompt_cleaned,
+                    'perplexity_full': perplexity_full,
+                    'perplexity': perplexity,
+                    'details': details
+                })
 
         return self.results
     
@@ -215,18 +218,39 @@ class Experiment:
         """
         Output the prompts of the experiment together with their (full and masked) perplexities
         """
+        self.evaluate()  # in case this has not already been done
         for d_no,result in enumerate(self.results):
             print("Prompt",d_no,":")
             print("  ",result['prompt_cleaned'])
             print("  full perplexity = ",result['perplexity_full'],"  masked perplexity = ",result['perplexity'])
 
 
+    def save_results_to_csv_file(self, file_name: str):
+        """
+        Store the results in a comma separated values (csv) text file
+
+        Args:
+
+        - file_name: Name of the file to save the table to
+        """
+        self.evaluate()  # in case this has not already been done
+
+        res = []
+        for d_no,result in enumerate(self.results):
+            res.append([d_no, result['prompt'], result['prompt_cleaned'], result['perplexity_full'], result['perplexity']])
+
+        df = pd.DataFrame(res, columns=['#Prompt', 'Prompt (input)', 'Prompt (cleaned)', 'Perplexity (full)', 'Perplexity (masked)'])
+        df.to_csv(file_name)
+
+
     def visualize_results(self):
         """
         print prompt tokens to console (colored by normalized p)
         """
-        if len(self.results)==0 or (not self._prompts_same_length()):
+        if not self._prompts_same_length():
             return None
+        
+        self.evaluate()  # in case this has not already been done
         
         for d_no,result in enumerate(self.results):
             details = result['details']
@@ -258,8 +282,10 @@ class Experiment:
 
         - A string containing the HTML table
         """
-        if len(self.results)==0 or (not self._prompts_same_length()):
+        if not self._prompts_same_length():
             return None
+        
+        self.evaluate()  # in case this has not already been done
         
         len0 = len(self.results[0]['details'])
 
@@ -322,7 +348,8 @@ class Experiment:
     
 
     def save_html_table_to_file(self, file_name:str, normalize_over_prompts=True) -> None:
-        """Create a HTML tabel from the results and save it to file_name
+        """
+        Create a HTML tabel from the results and save it to file_name
 
         Args:
 
