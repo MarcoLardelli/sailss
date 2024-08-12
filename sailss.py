@@ -13,16 +13,19 @@ Author: Marco Lardelli, Zurich/Switzerland
 
 Licence: MIT (see included license document)
 
+Version: 0.4.1 (11. August 2024)
+
 Copyright © 2024 Marco Lardelli
 
 """
 
 import mlx.core as mx
 import mlx.nn as nn
-from typing import Any, Callable, Dict, Generator, Optional, Tuple, Union
+
+from typing import Union
 
 from mlx_lm.models.base import KVCache
-from mlx_lm.tokenizer_utils import TokenizerWrapper, load_tokenizer
+from mlx_lm.tokenizer_utils import TokenizerWrapper
 
 from transformers import PreTrainedTokenizer
 
@@ -231,7 +234,7 @@ class Experiment:
 
         Args:
 
-        - file_name: Name of the file to save the table to
+        - file_name: Name of the file to save the results to
         """
         self.evaluate()  # in case this has not already been done
 
@@ -245,7 +248,7 @@ class Experiment:
 
     def visualize_results(self):
         """
-        print prompt tokens to console (colored by normalized p)
+        print prompt tokens to console (colored by normalized probability)
         """
         if not self._prompts_same_length():
             return None
@@ -349,12 +352,12 @@ class Experiment:
 
     def save_html_table_to_file(self, file_name:str, normalize_over_prompts=True) -> None:
         """
-        Create a HTML tabel from the results and save it to file_name
+        Create a HTML table from the results and save it to file_name
 
         Args:
 
         - file_name: Name of the file to save the table to
-        - normalize_over_prompts: if True -> normalize over the probabilities of the same token position of all prompts (instead of all tokens of prompt) 
+        - normalize_over_prompts: if True -> normalize over the probabilities of the same token position of all prompts (instead of all the tokens of the prompt) 
         
         
         """
