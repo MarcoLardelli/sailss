@@ -74,7 +74,7 @@ python3 -m examples.example_1
 
 # Citing SAILSS
 
-The SAILSS software suite was initially developed by Marco Lardelli. If you find
+The SAILSS software library was initially developed by Marco Lardelli. If you find
 SAILSS useful in your research and wish to cite it, please use the following
 BibTex entry:
 
