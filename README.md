@@ -71,6 +71,28 @@ You can run the examples in the *examples* folder from the SAILSS directory:
 python3 -m examples.example_1
 ```
 
+
+# Citing SAILSS
+
+The SAILSS software suite was initially developed by Marco Lardelli. If you find
+SAILSS useful in your research and wish to cite it, please use the following
+BibTex entry:
+
+```
+@software{sailss2024,
+  author = {Marco Lardelli},
+  title = {SAILSS: Scouting AI Library for Social Sciences},
+  url = {https://github.com/MarcoLardelli/sailss},
+  version = {0.4.1},
+  year = {2024},
+}
+```
+
+# Support
+
+Commercial support for this library is available from [Kanohi GmbH](https://kanohi.ch)
+
+
 Author: Marco Lardelli, Zurich/Switzerland   
 Licence: MIT (see included license document)   
 Copyright © 2024 Marco Lardelli   
