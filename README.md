@@ -90,7 +90,9 @@ BibTex entry:
 
 # Support
 
-Commercial support for this library is available from [Kanohi GmbH](https://kanohi.ch)
+Commercial support for this library is available from [Kanohi GmbH](https://kanohi.ch).
+
+If you want to *sponsor new features* contact the author (bugs are getting fixed for free).
 
 
 Author: Marco Lardelli, Zurich/Switzerland   
