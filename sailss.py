@@ -13,7 +13,7 @@ Author: Marco Lardelli, Zurich/Switzerland
 
 Licence: MIT (see included license document)
 
-Version: 0.4.1 (11. August 2024)
+Version: 0.4.2 (14. August 2024)
 
 Copyright © 2024 Marco Lardelli
 
