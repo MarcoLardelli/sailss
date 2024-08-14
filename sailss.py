@@ -60,20 +60,30 @@ class Experiment:
     def add_prompt(self, prompt) -> None:
         """
         Add a prompt to the experiment
+
+        Args:
+
+        - prompt: a string containing the prompt to be added
         """
         self.prompts.append(prompt)
 
 
-    def _prompts_same_length(self) -> bool:
+    def _prompts_same_length(self, verbose=False) -> bool:
         """
         Check whether all the prompts have the same length (in tokens!). Returns True if yes, otherwise False
+
+        Args:
+
+        - verbose: print debug info if set to True
         """
         len0 = len(self.results[0]['details'])
         same_length = True
-        for result in self.results:
+        for i,result in enumerate(self.results):
             details = result['details']
             if len(details)!=len0:
                 same_length = False
+                if verbose:
+                    print("Prompt #",i+1,"does not have the same length (in tokens!) as the first prompt!")
 
         return same_length
 
@@ -251,6 +261,7 @@ class Experiment:
         print prompt tokens to console (colored by normalized probability)
         """
         if not self._prompts_same_length():
+            print("Prompts do not have the same length (in tokens)!")
             return None
         
         self.evaluate()  # in case this has not already been done
@@ -286,6 +297,7 @@ class Experiment:
         - A string containing the HTML table
         """
         if not self._prompts_same_length():
+            print("Prompts do not have the same length (in tokens)!")
             return None
         
         self.evaluate()  # in case this has not already been done
