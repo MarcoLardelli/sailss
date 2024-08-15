@@ -1,7 +1,7 @@
 
 # SAILSS: The "Scouting AI Library for Social Sciences"
 
-![SAILSS library sample output](/img/sailss_output.png)
+![SAILSS library sample output](/img/sailss_output_2.png)
 
 ## Estimate the likelihood of sentences (or parts of sentences) based on a Large Language Model (LLM)
 
