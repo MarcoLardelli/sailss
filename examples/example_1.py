@@ -63,6 +63,8 @@ experiment.output_perplexities()
 
 experiment.save_results_to_csv_file('results.csv')
 
+experiment.save_token_results_to_csv_file('results_tokens.csv')
+
 
 
 

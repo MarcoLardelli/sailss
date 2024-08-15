@@ -13,7 +13,7 @@ Author: Marco Lardelli, Zurich/Switzerland
 
 Licence: MIT (see included license document)
 
-Version: 0.4.2 (14. August 2024)
+Version: 0.5.0 (15. August 2024)
 
 Copyright © 2024 Marco Lardelli
 
@@ -240,7 +240,7 @@ class Experiment:
 
     def save_results_to_csv_file(self, file_name: str):
         """
-        Store the results in a comma separated values (csv) text file
+        Store the results (only prompts and perplexities) in a comma separated values (csv) text file
 
         Args:
 
@@ -254,6 +254,43 @@ class Experiment:
 
         df = pd.DataFrame(res, columns=['#Prompt', 'Prompt (input)', 'Prompt (cleaned)', 'Perplexity (full)', 'Perplexity (masked)'])
         df.to_csv(file_name)
+
+    
+    def save_token_results_to_csv_file(self, file_name:str):
+        """
+        Store the results (details on token level) in a comma separated values (csv) text file
+        
+        For each prompt 5 lines are written:   
+        
+        1. Tokens (strings)
+        2. Tokens (integer)
+        3. logprob
+        4. p
+        5. Prodicted tokens for this posittion (strings)
+
+        Args:
+
+        - file_name: Name of the file to save the results to
+        """
+        self.evaluate()  # in case this has not already been done
+
+        len0 = len(self.results[0]['details'])
+    
+        res = []
+        for d_no,result in enumerate(self.results):
+            details = result['details']
+            res.append([ detail['token_str'] for detail in details])
+            res.append([ detail['token'] for detail in details])
+            res.append([ detail['logprob'] for detail in details])
+            res.append([ detail['p'] for detail in details])
+            res.append([ detail['predicted_token_str'] for detail in details])
+
+
+        columns = [ "Token #"+str(i) for i in range(len0)]
+
+        df = pd.DataFrame(res, columns=columns)
+        df.to_csv(file_name)
+
 
 
     def visualize_results(self):

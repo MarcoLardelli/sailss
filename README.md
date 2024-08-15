@@ -17,7 +17,11 @@ This library needs the [MLX Examples](https://github.com/ml-explore/mlx-examples
 pip install mlx-lm
 ```
 
-(to install all the required packages: pip install -r requirements.txt)
+To install *all* the required packages for SAILSS:
+
+```sh
+pip install -r requirements.txt
+```
 
 Then you can download SAILSS (this repository):
 ```sh
@@ -85,7 +89,7 @@ BibTex entry:
   author = {Marco Lardelli},
   title = {SAILSS: Scouting AI Library for Social Sciences},
   url = {https://github.com/MarcoLardelli/sailss},
-  version = {0.4.1},
+  version = {0.5.0},
   year = {2024},
 }
 ```
