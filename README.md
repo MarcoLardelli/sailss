@@ -7,6 +7,8 @@ This library is described in a series of posts on [my blog](https://lardel.li/20
 
 Github repository: [/MarcoLardelli/sailss](https://github.com/MarcoLardelli/sailss)
 
+![SAILSS library sample output](/img/sailss_output.png)
+
 **Important note: this library is work in progress and still in a raw state.**
 
 ## Installation
