@@ -1,0 +1,5 @@
+mlx==0.15.2
+mlx_lm==0.15.0
+num2words==0.5.13
+pandas==2.2.2
+transformers==4.42.3

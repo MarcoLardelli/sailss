@@ -17,6 +17,8 @@ This library needs the [MLX Examples](https://github.com/ml-explore/mlx-examples
 pip install mlx-lm
 ```
 
+(to install all the required packages: pip install -r requirements.txt)
+
 Then you can download SAILSS (this repository):
 ```sh
 git clone https://github.com/MarcoLardelli/sailss
