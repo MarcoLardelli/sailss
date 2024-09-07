@@ -101,7 +101,7 @@ class Experiment:
         - 'prompt': the input prompt
         - 'prompt_cleaned': the input prompt with switch tag || removed and other modifications
         - 'perplexity_full': perplexity of full prompt
-        - 'perplexity': perplexity limited to tokes allowed by switch tag ||
+        - 'perplexity': perplexity limited to tokens allowed by switch tag ||
         - 'details': list of dicts (see below)
 
 
@@ -582,6 +582,14 @@ def measure(
         print("Raw prompt:", prompt)
 
     prompt=prompt.strip() # remove leading and trailing whitespace
+    # replace all kinds of punctuation marks by a space
+    remove_chars = ".,:;?!-"
+    for c in remove_chars:
+        prompt = prompt.replace(c, " ")
+    # now make sure there are no multiple spaces in the prompt
+    for i in range(4): # four iterations should be enough
+        prompt = prompt.replace("  ", " ")
+
     # apply standard tokenizer to prompt  (we need it just for checking)
     cleaned_prompt = prompt.replace('||',' ') # remove the switch tag
     cleaned_prompt = cleaned_prompt.strip() # in case there was a || at the beginning
